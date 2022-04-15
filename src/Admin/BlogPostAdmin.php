@@ -5,6 +5,7 @@ namespace App\Admin;
 use App\Entity\BlogPost;
 use App\Entity\Category;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
+use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
@@ -12,7 +13,6 @@ use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\Form\Type\BooleanType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -24,6 +24,18 @@ final class BlogPostAdmin extends AbstractAdmin
         $actions = parent::configureDashboardActions($actions);
         dump($actions);
         return $actions;
+    }
+
+    // public function configureExportFields(AdminInterface $admin, array $fields): array
+    // {
+    //     // Export specific fields
+    //     dump($fields);
+    //     return $fields;
+    // }
+
+    public function getExportFormats(): array
+    {
+        return ['csv', 'xml', 'json'];
     }
 
     protected function configureFormFields(FormMapper $form): void
