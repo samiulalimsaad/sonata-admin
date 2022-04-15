@@ -84,4 +84,9 @@ class BlogPost
             ? $object->getTitle()
             : 'Blog Post'; // shown in the breadcrumb on the create view
     }
+
+    public function __toString(): string
+    {
+        return $this->getTitle();
+    }
 }

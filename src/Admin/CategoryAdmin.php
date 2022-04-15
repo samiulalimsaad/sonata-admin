@@ -11,6 +11,14 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 final class CategoryAdmin extends AbstractAdmin
 {
+
+    protected function configureDashboardActions(array $actions): array
+    {
+        $actions = parent::configureDashboardActions($actions);
+        dump($actions);
+        return $actions;
+    }
+
     protected function configureFormFields(FormMapper $form): void
     {
         $form->add('name', TextType::class);

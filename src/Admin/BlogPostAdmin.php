@@ -2,18 +2,30 @@
 
 namespace App\Admin;
 
+use App\Entity\BlogPost;
 use App\Entity\Category;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
+use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\Form\Type\BooleanType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 final class BlogPostAdmin extends AbstractAdmin
 {
+
+    protected function configureDashboardActions(array $actions): array
+    {
+        $actions = parent::configureDashboardActions($actions);
+        dump($actions);
+        return $actions;
+    }
+
     protected function configureFormFields(FormMapper $form): void
     {
         $form
@@ -34,12 +46,42 @@ final class BlogPostAdmin extends AbstractAdmin
             ->end();
     }
 
+    protected function configureDatagridFilters(DatagridMapper $datagrid): void
+    {
+        $datagrid
+            ->add(
+                'title',
+                null,
+                [
+                    'field_type' => EntityType::class,
+                    'field_options' => [
+                        'class' => BlogPost::class,
+                        'choice_label' => 'title'
+                    ]
+                ]
+            )
+            ->add('body')
+            ->add('draft')
+            ->add(
+                'category',
+                null,
+                [
+                    'field_type' => EntityType::class,
+                    'field_options' => [
+                        'class' => Category::class,
+                        'choice_label' => 'name'
+                    ]
+                ]
+            );
+    }
+
     protected function configureListFields(ListMapper $list): void
     {
         $list
-            ->add('title')
-            ->add('body')
-            ->add('draft')
+            ->addIdentifier('id')
+            ->addIdentifier('title')
+            ->addIdentifier('body')
+            ->addIdentifier('draft')
             ->add('category', Category::class);
     }
 
@@ -47,9 +89,22 @@ final class BlogPostAdmin extends AbstractAdmin
     protected function configureShowFields(ShowMapper $show): void
     {
         $show
+            // ->add('id')
+            // ->add('title')
+            // ->add('body')
+            // ->add('draft')
+            // ->add('category.name');
+            // ->tab('Post')
+            ->with('Content', ['class' => 'col-md-9'])
             ->add('title')
             ->add('body')
+            ->end()
+            // ->end()
+            // ->tab('Publish Options')
+            ->with('Meta Data', ['class' => 'col-md-3'])
             ->add('draft')
-            ->add('category', Category::class);
+            ->add('category.name')
+            // ->end()
+            ->end();
     }
 }
