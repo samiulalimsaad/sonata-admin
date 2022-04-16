@@ -5,10 +5,11 @@ namespace App\Admin;
 use App\Entity\BlogPost;
 use App\Entity\Category;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
-use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Form\Type\ChoiceFieldMaskType;
+use Sonata\AdminBundle\Form\Type\ModelAutocompleteType;
 use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\Form\Type\BooleanType;
@@ -45,12 +46,24 @@ final class BlogPostAdmin extends AbstractAdmin
             ->with('Content', ['class' => 'col-md-9'])
             ->add('title', TextType::class)
             ->add('body', TextareaType::class)
+            // ->add('body', ChoiceFieldMaskType::class, [
+            //     'choices' => [
+            //         'title' => 'title',
+            //         'draft' => 'draft',
+            //     ],
+            //     'map' => [
+            //         'draft' => ['title', 'draft'],
+            //         'title' => ['draft'],
+            //     ],
+            //     'placeholder' => 'Choose an option',
+            //     'required' => false
+            // ])
             ->end()
             ->end()
             ->tab('Publish Options')
             ->with('Meta Data', ['class' => 'col-md-3'])
             ->add('draft', BooleanType::class)
-            ->add('category', ModelType::class, [
+            ->add('category', ModelAutocompleteType::class, [
                 'class' => Category::class,
                 'property' => 'name'
             ])
