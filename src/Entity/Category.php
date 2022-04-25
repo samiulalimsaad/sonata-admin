@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\GenderEnum;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -20,6 +21,9 @@ class Category
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: BlogPost::class)]
     private $blogPosts;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $type;
 
     public function __construct()
     {
@@ -83,5 +87,20 @@ class Category
     public function __toString(): string
     {
         return $this->getName();
+    }
+
+    public function getType(): ?GenderEnum
+    {
+        if ($this->type) {
+            return GenderEnum::from($this->type);
+        }
+        return null;
+    }
+
+    public function setType(GenderEnum $type): self
+    {
+        $this->type = $type->value;
+
+        return $this;
     }
 }
